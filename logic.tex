@@ -1,0 +1,256 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\setlength{\parindent}{0bp}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Logic Proofs}
+
+\author{Harry Liu \& Tyler Nickerson}
+\maketitle
+\begin{enumerate}
+\item \emph{Detective James is solving a case. The four suspects $A$, $B$,
+$C$ and $D$ made the following statements:}
+
+\begin{itemize}
+\item \emph{If $A$ is guilty then $B$ was an accomplice}
+\item \emph{If $B$ is guilty then either $C$ was an accomplice or A is
+innocent}
+\item \emph{If $D$ is guilty then $A$ is guilty and $C$ is innocent}
+\item \emph{If $D$ is guilty then $A$ is guilty}
+\end{itemize}
+
+\emph{Is D guilty based on these statements? }
+
+
+\subsubsection*{Proof By Truth Table}
+
+
+First, let us convert the above statements to their CNF logical equivalents. To clean up our proof, let us assume that
+if a constant $X$ is true, then it means that suspect $X$ is guilty. For this problem, the term ``accomplice'' will be used
+interchangeablely with ``guilty''.
+
+\begin{enumerate}
+\item $\lnot A\lor B$
+\item $\lnot B\lor(C\lor\lnot A)$
+\item $(\lnot D\lor A)\land(\lnot D\lor\lnot C)$
+\item $\lnot D\lor A$
+\end{enumerate}
+
+Next, we use these sentences to generate the following truth table:
+\\\\
+\begin{tabular}{ | l | l | l | l | l | l | l | l | }
+\hline
+	$A$ & $B$ & $C$  & $D$ & (a) & (b) & (c) & (d) \\ \hline
+	T & T & T & F & T & T & T & T \\ \hline
+	T & T & F & F & T & F & T & T \\ \hline
+	T & F & T & F & F & T & T & T \\ \hline
+	T & F & F & F & F & T & T & T \\ \hline
+	F & T & T & F & T & T & T & T \\ \hline
+	F & T & F & F & T & T & T & T \\ \hline
+	F & F & T & F & T & T & T & T \\ \hline
+	F & F & F & F & T & T & T & T \\ \hline
+	T & T & F & T & T & F & T & T \\ \hline
+	T & F & T & T & F & T & F & T \\ \hline
+	T & F & F & T & F & T & T & T \\ \hline
+	F & T & T & T & T & T & F & F \\ \hline
+	F & T & F & T & T & T & F & F \\ \hline
+	F & F & T & T & T & T & F & F \\ \hline
+	F & F & F & T & T & T & F & F \\ \hline
+	T & T & T & T & T & T & F & T \\ \hline
+\end{tabular}
+\\\\
+Looking at this table, we see that for all cases in which $D$ is guilty,
+there are no cases in which all four statements are true. Therefore, we cannot prove that $D$ is guilty.
+\\\\
+Following the above sentences, this makes sense. If $D$ is guilty,
+then $A$ is guilty and $C$ is innocent. However, if $A$ is guilty, then $B$ was
+an accomplice (guilty), and if $B$ is guilty, then $C$ was either an accomplice
+(guilty) or $A$ was innocent. However, we just said $C$ is innocent and $A$ is
+guilty! This is a contradiction, and we will prove this more formally later.
+
+\subsubsection*{Proving By Resolution}
+
+Let us formalize this proof using resolution:
+\\\\
+\begin{tabular}{lll}
+1 & $\lnot A\lor B$ & Given \\
+2 & $\lnot B\lor C\lor\lnot A$ & Given \\
+3 & $\lnot D\lor A$ & Given \\
+4 & $\lnot D\lor\lnot C$ & Given \\
+5 & $B\lor\lnot D$ & Resolution between 1 and 3 \\
+6 & $\lnot A \lor\lnot B \lor\lnot D$ & Resolution between 2 and 4 \\
+7 & $\lnot A \lor C \lor\lnot D$ & Resolution between 2 and 5 \\
+\end{tabular}
+\\\\\\
+No further resolutions can be drawn. As a result, we cannot prove $D$ is true/guilty, as it cannot be resolved
+using the given statements.
+
+\subsubsection*{Adding Refutation}
+
+Now let us add $\lnot D$ to the premise:
+\\\\
+\begin{tabular}{lll}
+1 & $\lnot A\lor B$ & Given \\
+2 & $\lnot B\lor C\lor\lnot A$ & Given \\
+3 & $\lnot D\lor A$ & Given \\
+4 & $\lnot D\lor\lnot C$ & Given \\
+5 & $\lnot D$ & Negated conclusion \\
+6 & $B\lor\lnot D$ & Resolution between 1 and 3 \\
+7 & $\lnot A \lor\lnot B \lor\lnot D$ & Resolution between 2 and 4 \\
+8 & $\lnot A \lor C \lor\lnot D$ & Resolution between 2 and 5 \\
+\end{tabular}
+\\\\
+We still cannot resolve any further, so we cannot prove whether suspect $D$ is guilty or not.
+
+\item \emph{If the Congress refuses to vote for new laws then strike would
+not be finished. Except for the case when it continues for more than
+a month and a company's CEO retires. The Congress refuses to operate
+and strike finishes. Therefore strike was going on for more than a
+month.}
+
+\subsubsection*{Proof by Truth Table}
+
+Let us first convert these sentences into logical constants:
+
+\begin{itemize}
+    \item Let $A$ denote Congress refusing to vote for new laws
+    \item Let $B$ denote the strike finishing
+    \item Let $C$ denote the strike continuing for more than a month
+    \item Let $D$ denote a company's CEO retiring
+\end{itemize}
+
+We can now incorporate these into CNF logical statements as so:
+
+\begin{enumerate}
+    \item $\lnot A \lor\lnot B$
+    \item $(\lnot C \lor\lnot D) \lor B$
+\end{enumerate}
+
+which generates the following truth table:
+
+\begin{tabular}{ | l | l | l | l | l | l | }
+\hline
+	$A$ & $B$ & $C$ & $D$ & $\lnot A \lor\lnot B$ & $(\lnot C \lor\lnot D) \lor\lnot B$ \\ \hline
+    T & T & T & T & F & T \\ \hline
+	T & T & T & F & F & T \\ \hline
+	T & F & T & T & T & F \\ \hline
+	T & F & T & F & T & T \\ \hline
+	F & T & T & T & T & T \\ \hline
+	F & T & T & F & T & T \\ \hline
+	F & F & T & T & T & F \\ \hline
+	F & F & T & F & T & T \\ \hline
+	T & T & F & T & F & T \\ \hline
+	T & T & F & F & F & T \\ \hline
+	T & F & F & T & T & T \\ \hline
+	T & F & F & F & T & T \\ \hline
+	F & T & F & T & T & T \\ \hline
+	F & T & F & F & T & T \\ \hline
+	F & F & F & T & T & T \\ \hline
+	F & F & F & F & T & T \\ \hline
+\end{tabular}
+
+Now, remember the statement we are trying to prove: Congress refused to operate, and the strike finished after lasting
+more than a month. We check our knowledge base by looking at each instance in which $A$, $B$, and $C$ are true, then
+checking to see if statements (a) and (b) are satisfied at these points.
+\\
+Examining the table, we
+
+\subsubsection*{Proof by Resolution}
+
+We formalize this proof through resolution:
+
+\begin{tabular}{lll}
+1 & $\lnot A \lor B$ & Given \\
+2 & $\lnot B \lor C$ & Given \\
+3 & $C$ & Given \\
+4 & $\lnot A \lor C$ & Resolution of 1 and 2 \\
+\end{tabular}
+
+
+\item \emph{If 2 is a prime number then 2 is the smallest prime number.
+If 2 is the smallest prime number then 1 is not a prime number. 1
+is not a prime number. Are the following propositions correct based
+on the aforementioned statements?}
+
+\begin{itemize}
+\item \emph{2 is the smallest prime number}
+\item \emph{2 is a prime number }
+\end{itemize}
+
+\subsubsection*{Proof by Truth Table}
+
+Let us convert these statements into logical constants. Let $A$ denote
+2 being a prime number, $B$ denote 2 being the \emph{smallest} prime number,
+and let $C$ denote 1 as not a prime number. Given these conversion, we
+are left with the following sentences:
+
+\begin{enumerate}
+    \item $\lnot A \lor B$
+    \item $\lnot B \lor C$
+    \item $C$
+\end{enumerate}
+
+From this we create the following truth table:
+\\\\
+\begin{tabular}{ | l | l | l | l | l | l | }
+\hline
+	$A$ & $B$ & $C$ & $\lnot A \lor B$ & $\lnot B \lor C$ & $C$ = True \\ \hline
+    T & T & T & T & T & T \\ \hline
+	T & T & F & T & F & F \\ \hline
+	T & F & T & F & T & T \\ \hline
+	T & F & F & F & T & F \\ \hline
+	F & T & T & T & T & T \\ \hline
+	F & T & F & T & F & F \\ \hline
+	F & F & T & T & T & T \\ \hline
+	F & F & F & T & T & F \\ \hline
+\end{tabular}
+\\\\\\
+Looking at this table, we can see that there are only two case in which all three of our
+statements are true:
+
+\begin{itemize}
+    \item When $A$ and $B$ are both false and $C$ is true
+    \item When $A$, $B$, and $C$ are all true
+\end{itemize}
+
+Therefore, there is only two solutions in which the above propositions are true. In other worlds, these propositions
+cannot be proven.
+
+\subsubsection*{Proof by Resolution}
+
+We formalize this proof through resolution:
+
+\begin{tabular}{lll}
+1 & $\lnot A \lor B$ & Given \\
+2 & $\lnot B \lor C$ & Given \\
+3 & $C$ & Given \\
+4 & $\lnot A \lor C$ & Resolution of 1 and 2 \\
+\end{tabular}
+\\\\\\
+From this, we cannot resolve neither $A$ nor $B$. Therefore,
+both cannot be proven.
+
+\subsubsection*{Adding Refutation}
+
+To further our proof, let us assume $B$ is false. We can add $\lnot B$
+to the above table, however, we cannot resolve any further statements
+using it. Therefore, we are left with the same knowledge base, and
+we still cannot prove neither $A$ nor $B$.
+
+\end{enumerate}
+\end{document}
